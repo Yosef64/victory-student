@@ -41,8 +41,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     #         reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     #         await update.message.reply_text("Hello", reply_markup=reply_markup,parse_mode="MarkdownV2")
     #         return 
-    except Exception as e:
-        await update.message.reply_text(e)
+    # except Exception as e:
+    #     await update.message.reply_text(e)
 async def check_user(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer() 
