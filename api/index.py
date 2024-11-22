@@ -14,32 +14,35 @@ app = FastAPI()
 async def start(update: Update, context: CallbackContext) -> None:
     # await update.message.reply_text("hello world")
     # return
-    referal = context.args[0] if context.args else ""
-    userInfo = {"userName":update.message.from_user.full_name,"userId":str(update.message.from_user.id)}
-    chat_member = await context.bot.get_chat_member(chat_id=channal_link, user_id=update.message.from_user.id, )
-    if chat_member.status in ['left', 'kicked']:
-        keyboard = [[
-            InlineKeyboardButton("OK", callback_data="check_user")
-        ]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        
-        await update.message.reply_text(
-            "To use this bot, please join our channel and press OK when you are ready.",
-            reply_markup=reply_markup
-        )
-    else:
-        
-        AddStudent(referal,userInfo=userInfo)
+    try:
+        referal = context.args[0] if context.args else ""
+        userInfo = {"userName":update.message.from_user.full_name,"userId":str(update.message.from_user.id)}
+        chat_member = await context.bot.get_chat_member(chat_id=channal_link, user_id=update.message.from_user.id, )
+        if chat_member.status in ['left', 'kicked']:
+            keyboard = [[
+                InlineKeyboardButton("OK", callback_data="check_user")
+            ]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            
+            await update.message.reply_text(
+                "To use this bot, please join our channel and press OK when you are ready.",
+                reply_markup=reply_markup
+            )
+        else:
+            
+            AddStudent(referal,userInfo=userInfo)
 
-        keyboard = [["📚12th Natural Entrance Examinee student"],
-                    ['📚11th Natural Student'],
-                    ["📚Natural Remedial student"],
-                    ["📚Social Remedial student"],
-                    ['📚12th Social Entrance Examinee student'],
-                    ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
-        reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
-        await update.message.reply_text("Hello", reply_markup=reply_markup,parse_mode="MarkdownV2")
-        return 
+            keyboard = [["📚12th Natural Entrance Examinee student"],
+                        ['📚11th Natural Student'],
+                        ["📚Natural Remedial student"],
+                        ["📚Social Remedial student"],
+                        ['📚12th Social Entrance Examinee student'],
+                        ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
+            reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+            await update.message.reply_text("Hello", reply_markup=reply_markup,parse_mode="MarkdownV2")
+            return 
+    except Exception as e:
+        await update.message.reply_text(e)
 async def check_user(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer() 
