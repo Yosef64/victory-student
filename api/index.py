@@ -11,7 +11,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 channal_link = "@VictoryTutor_7"
 app = FastAPI()
 
-async def start(update: Update, context: CallbackContext) -> None:
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # await update.message.reply_text("hello world")
     # return
     try:
@@ -30,7 +30,7 @@ async def start(update: Update, context: CallbackContext) -> None:
             )
         else:
             
-            AddStudent(referal,userInfo=userInfo)
+            # AddStudent(referal,userInfo=userInfo)
 
             keyboard = [["📚12th Natural Entrance Examinee student"],
                         ['📚11th Natural Student'],
