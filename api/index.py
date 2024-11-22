@@ -28,6 +28,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
             "To use this bot, please join our channel and press OK when you are ready.",
             reply_markup=reply_markup
         )
+    else:
+        await update.message.reply_text("Welcome to Victory Tutor, please select an option below:")
     #     else:
             
     #         # AddStudent(referal,userInfo=userInfo)
