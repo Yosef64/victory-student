@@ -229,4 +229,4 @@ async def process_update(request: Request):
 async def index(request:Request):
     return {"message":"ok"}
 
-#https://api.telegram.org/bot7756252447:AAH6fSVh8Q6s2hip4w4wCblqDuOtrLSWSR4/setWebhook?url=https://victory-student.vercel.app/
+#https://api.telegram.org/bot7257926553:AAFPxmgE4nHl-hUv44LMOFs1V1_F9I1NuN4/setWebhook?url=https://victory-student.vercel.app/
