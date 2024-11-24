@@ -114,7 +114,9 @@ Grade choice: {grade if grade else "Didn't choose a grade"}
         if agentTeleId:
             await update.message.forward(chat_id=agentTeleId)
             await context.bot.send_message(chat_id=agentTeleId, text=textAgent)
-        await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል")
+        keyboard = [["🔝 Main Menu"]]
+        reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+        await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል",reply_markup=reply_markup)
 async def final(update:Update,context:CallbackContext,M):
     keyboard = [["🔝 Main Menu"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
