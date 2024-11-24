@@ -4,33 +4,43 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update,ReplyKey
 from telegram.ext import Application, CommandHandler,MessageHandler,CallbackQueryHandler,filters,CallbackContext
 from telegram.ext._contexttypes import ContextTypes
 from fastapi import FastAPI, Request, Response
-from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo, getLastId,natural, setLastId, setStudentInfo,social,message,Banks
+from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo, getLastId,natural, setLastId, setStudentInfo,social,message,Banks,txt
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 channal_link = "@VictoryTutor_7"
 app = FastAPI()
 Admin_id = "1656463485"
+
+def getMainMarkup():
+    keyboard = [["📚12th Natural Entrance Examinee student"],
+                    ['📚11th Natural Student'],
+                    ["📚Natural Remedial student"],
+                    ["📚Social Remedial student"],
+                    ['📚12th Social Entrance Examinee student'],
+                    ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    # await update.message.reply_text("hello world")
-    # return
+    
     try:
         referal = context.args[0] if context.args else ""
         userInfo = {"userName":update.message.from_user.full_name,"userId":str(update.message.from_user.id)}
         chat_member = await context.bot.get_chat_member(chat_id=channal_link, user_id=update.message.from_user.id, )
         if chat_member.status in ['left', 'kicked']:
             keyboard = [[
-                InlineKeyboardButton("Ready", callback_data="check_user")
+                InlineKeyboardButton("Ready", callback_data=f"check_user:{referal}")
             ]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            
+
             await update.message.reply_text(
-                "To use this bot, please join our channel and press OK when you are ready.",
+                """To use this bot, please join our channel and press 'Ready' when you are ready.
+                channel : @VictoryTutor_7
+                """,
                 reply_markup=reply_markup
             )
-        
         else:
-            
+
             AddStudent(referal,userInfo=userInfo)
 
             keyboard = [["📚12th Natural Entrance Examinee student"],
@@ -40,21 +50,31 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
                         ['📚12th Social Entrance Examinee student'],
                         ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
             reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
-            await update.message.reply_text(message, reply_markup=reply_markup,parse_mode="MarkdownV2")
-            return 
+            await update.message.reply_text(txt, reply_markup=reply_markup,parse_mode="MarkdownV2")
+            return
     except Exception as e:
         await update.message.reply_text(e)
 async def check_user(update: Update, context: CallbackContext):
     query = update.callback_query
-    await query.answer() 
-    
+    await query.answer()
+    queryData = query.data.split(":")
+    referal = queryData[1] if len(queryData) == 2 else ""
+    userInfo = {"userName":query.from_user.full_name,"userId":str(query.from_user.id)}
     chat_member = await context.bot.get_chat_member(chat_id=channal_link, user_id=query.from_user.id, )
-    
-    if chat_member.status in ['member', 'administrator', 'creator']:
-        await context.bot.send_message(chat_id=query.from_user.id, text="You have already approve this student!")
+    keyboard = [[
+            InlineKeyboardButton("OK", callback_data=f"check_user:{referal}")
+        ]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    if chat_member.status in ['left', 'kicked']:
+        await context.bot.send_message(chat_id=query.from_user.id, text="""You haven't joined our channel yet.Please join our channel and press 'Ready' when you are ready.
+            channel : @VictoryTutor_7
+            """,reply_markup=reply_markup)
     else:
-        await query.answer(text="Please join the channel to proceed!", show_alert=True)
-    return 
+        reply_markup = getMainMarkup()
+        AddStudent(referal,userInfo=userInfo)
+        await context.bot.send_message(chat_id=query.from_user.id, text=txt,reply_markup=reply_markup,parse_mode="MarkdownV2")
+    return
 
 async def payment(update: Update, context: CallbackContext,isNatural) -> None:
     keyboard = [['payment method 💳'], ['🔙 Back', "🔝 Main Menu"]]
