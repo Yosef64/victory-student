@@ -125,6 +125,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
     student_categories = {
         "📚12th Natural Entrance Examinee student": True,
         "📚Natural Remedial student": True,
+        "📚11th Natural Student":True,
         "📚12th Social Entrance Examinee student": False,
         "📚Social Remedial student": False,
     }
