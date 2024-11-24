@@ -69,7 +69,7 @@ async def banks(update: Update, context: CallbackContext) -> None:
 async def forward_photo_to_bot_b(update: Update, context: CallbackContext) -> None:
     userId = update.message.from_user.id
     if update.message.photo:
-        target_chat_id = "6053243300"
+        target_chat_id = "1656463485"
         studData = GetStudentInfo(str(userId))
         bank, grade = studData["bank"], studData["grade"]
         agentTeleId , agentReferalCode = GetAgentTeleId(str(update.message.from_user.id))
