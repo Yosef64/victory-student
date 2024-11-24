@@ -184,10 +184,13 @@ async def button(update:Update,context:CallbackContext):
         await context.bot.send_message(chat_id=query.from_user.id, text="You have successfully deny the request!")
         await context.bot.send_message(chat_id=agentTeleId,text=f"User {stud} has denied!")
     elif action== "ask":
-        setStudentInfo(userId,["ready",True])
-        if str(userId) == Admin_id:
-            setLastId(sender_user_id)
-        await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
+        try:
+            setStudentInfo(userId,["ready",True])
+            if str(userId) == Admin_id:
+                setLastId(sender_user_id)
+            await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
+        except Exception as e:
+            await context.bot.send_message(chat_id=userId, text=e)
     elif action == "send":
         setStudentInfo(userId,["ready",False])
         keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
