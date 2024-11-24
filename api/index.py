@@ -125,7 +125,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
             await update.message.reply_text(message, quote=True, parse_mode="MarkdownV2")
         elif text == "payment method 💳":
             await banks(update, context)
-        elif text in banks:
+        elif text in bank:
             setStudentInfo(str(user_id), ["bank", text])
             await final(update, context, Banks[text])
         elif text in ['🔝 Main Menu', '🔙 Back']:
