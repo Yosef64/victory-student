@@ -115,7 +115,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         "📚12th Social Entrance Examinee student": False,
         "📚Social Remedial student": False,
     }
-    banks = ['CBE', 'Tele Birr', 'Awash Bank', 'E-Birr']
+    bank = ['CBE', 'Tele Birr', 'Awash Bank', 'E-Birr']
     
     try:
         if text in student_categories:
