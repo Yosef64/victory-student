@@ -114,7 +114,7 @@ Grade choice: {grade if grade else "Didn't choose a grade"}
         if agentTeleId:
             await update.message.forward(chat_id=agentTeleId)
             await context.bot.send_message(chat_id=agentTeleId, text=textAgent)
-        await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል",reply_markup=reply_markup)
+        await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል")
 async def final(update:Update,context:CallbackContext,M):
     keyboard = [["🔝 Main Menu"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
@@ -146,7 +146,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         elif text in ['🔝 Main Menu', '🔙 Back']:
             await start(update, context)
         else:
-            data = GetStudentInfo()
+            data = GetStudentInfo(user_id)
             if "ready" in data and data["ready"]:
                 keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
                 reply_markup = InlineKeyboardMarkup(keyboard)
