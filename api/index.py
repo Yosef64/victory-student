@@ -134,7 +134,6 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
             keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{message}")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await update.message.reply_text(
-                chat_id=user_id,
                 text=f"Your message is:\n{message}",
                 reply_markup=reply_markup,
             )
