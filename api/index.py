@@ -190,6 +190,7 @@ async def button(update:Update,context:CallbackContext):
             await context.bot.send_message(chat_id=to,text=f"From admin:\n{agentTeleId}",reply_markup=reply_markup)
         else:
             await  context.bot.send_message(chat_id=Admin_id, text=f"From {query.from_user.username}:\n{agentTeleId}",reply_markup=reply_markup)
+        await context.bot.send_message(chat_id=query.from_user.id, text="Your message has been sent!")
         
 @app.post("/")
 async def process_update(request: Request):
