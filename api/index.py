@@ -14,10 +14,10 @@ Admin_id = "1656463485"
 
 def getMainMarkup():
     keyboard = [["📚12th Natural Entrance Examinee student"],
-                    ['📚11th Natural Student'],
+                ['📚12th Social Entrance Examinee student'],
                     ["📚Natural Remedial student"],
                     ["📚Social Remedial student"],
-                    ['📚12th Social Entrance Examinee student'],
+                     ['📚11th Natural Student'],
                     ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup
@@ -94,14 +94,14 @@ async def forward_photo_to_bot_b(update: Update, context: CallbackContext) -> No
         Agent Telegram ID: {agentTeleId if agentTeleId else "The Agent has telegram Id"}
         """
         textAdmin = f"""
-Full Name: {update.message.from_user.full_name}
-User Name: @{update.message.from_user.username}
-User ID: #{str(userId)}
-Agent Referral Code: {agentReferalCode if agentReferalCode else "He/She Got here on her/his own"}
-Agent Telegram ID: {agentTeleId if agentTeleId else "The Agent has telegram Id"}
-Bank choice: {bank if bank else "didn't choose a bank" }
-Grade choice: {grade if grade else "Didn't choose a grade"}
-"""
+            Full Name: {update.message.from_user.full_name}
+            User Name: @{update.message.from_user.username}
+            User ID: #{str(userId)}
+            Agent Referral Code: {agentReferalCode if agentReferalCode else "He/She Got here on her/his own"}
+            Agent Telegram ID: {agentTeleId if agentTeleId else "The Agent has telegram Id"}
+            Bank choice: {bank if bank else "didn't choose a bank" }
+            Grade choice: {grade if grade else "Didn't choose a grade"}
+            """
 
         keyboard = [
         [InlineKeyboardButton("Approve 👍", callback_data=f"approve:{userId}:{agentTeleId}"),
