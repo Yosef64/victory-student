@@ -148,7 +148,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         elif text in ['🔝 Main Menu', '🔙 Back']:
             await start(update, context)
         else:
-            data = GetStudentInfo(user_id)
+            data = GetStudentInfo(str(user_id))
             if "ready" in data and data["ready"]:
                 keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
                 reply_markup = InlineKeyboardMarkup(keyboard)
