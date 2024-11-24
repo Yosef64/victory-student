@@ -193,7 +193,7 @@ async def button(update:Update,context:CallbackContext):
             await context.bot.send_message(chat_id=userId, text=str(e))
 
     elif action == "send":
-        setStudentInfo(userId,["ready",False])
+        setStudentInfo(str(userId),["ready",False])
         keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if str(userId) == Admin_id:
