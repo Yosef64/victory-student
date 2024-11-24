@@ -185,7 +185,7 @@ async def button(update:Update,context:CallbackContext):
         await context.bot.send_message(chat_id=agentTeleId,text=f"User {stud} has denied!")
     elif action== "ask":
         try:
-            setStudentInfo(userId,["ready",True])
+            setStudentInfo(str(userId),["ready",True])
             if str(userId) == Admin_id:
                 setLastId(sender_user_id)
             await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
