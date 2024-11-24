@@ -107,25 +107,40 @@ async def final(update:Update,context:CallbackContext,M):
     await update.message.reply_text(M , reply_markup=reply_markup,parse_mode="MarkdownV2")
 
 async def handle_option(update: Update, context: CallbackContext) -> None:
-    global stack
-    possibles = ['📚12th Natural Entrance Examinee student',"📚12th Social Entrance Examinee student","📚Natural Remedial student","📚Social Remedial student"]
-    text ,userId = update.message.text, update.message.from_user.id
-    if text in possibles:
-        setStudentInfo(str(userId),["grade",text])
-        await payment(update, context,text in ['📚12th Natural Entrance Examinee student',"📚Natural Remedial student"] )
-    elif text == 'ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓':
-        await update.message.reply_text(message, quote=True, parse_mode="MarkdownV2")
-    elif text == "payment method 💳":
-        await banks(update, context)
-    elif text in ['CBE', 'Tele Birr', 'Awash Bank', 'E-Birr']:
-        setStudentInfo(str(userId),["bank",text])
-        await final(update,context,Banks[text])
-    elif text in ['🔝 Main Menu','🔙 Back']:
-        await start(update, context)
-    else:
-        keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{userId}:{message}")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await context.bot.send_message(chat_id=userId, text=f"Your message is :\n{message}",reply_markup=reply_markup) 
+    user_id = update.message.from_user.id
+    text = update.message.text
+    student_categories = {
+        "📚12th Natural Entrance Examinee student": True,
+        "📚Natural Remedial student": True,
+        "📚12th Social Entrance Examinee student": False,
+        "📚Social Remedial student": False,
+    }
+    banks = ['CBE', 'Tele Birr', 'Awash Bank', 'E-Birr']
+    
+    try:
+        if text in student_categories:
+            setStudentInfo(str(user_id), ["grade", text])
+            await payment(update, context, student_categories[text])
+        elif text == 'ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓':
+            await update.message.reply_text(message, quote=True, parse_mode="MarkdownV2")
+        elif text == "payment method 💳":
+            await banks(update, context)
+        elif text in banks:
+            setStudentInfo(str(user_id), ["bank", text])
+            await final(update, context, Banks[text])
+        elif text in ['🔝 Main Menu', '🔙 Back']:
+            await start(update, context)
+        else:
+            keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{message}")]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=f"Your message is:\n{message}",
+                reply_markup=reply_markup,
+            )
+    except Exception as e:
+        await update.message.reply_text("An error occurred. Please try again.")
+
 async def button(update:Update,context:CallbackContext):
     query = update.callback_query
     await query.answer()
@@ -155,7 +170,7 @@ async def button(update:Update,context:CallbackContext):
             setLastId(sender_user_id)
         await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
     elif action == "send":
-        keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
+        keyboard = [[InlineKeyboardButton("Reply", callback_data=f"reply:{userId}:{" "}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if userId == Admin_id:
             to = getLastId()
