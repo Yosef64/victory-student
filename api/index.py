@@ -43,13 +43,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
             AddStudent(referal,userInfo=userInfo)
 
-            keyboard = [["📚12th Natural Entrance Examinee student"],
-                        ['📚11th Natural Student'],
-                        ["📚Natural Remedial student"],
-                        ["📚Social Remedial student"],
-                        ['📚12th Social Entrance Examinee student'],
-                        ['ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓']]
-            reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+            reply_markup = getMainMarkup()
             await update.message.reply_text(txt, reply_markup=reply_markup,parse_mode="MarkdownV2")
             return
     except Exception as e:
@@ -62,7 +56,7 @@ async def check_user(update: Update, context: CallbackContext):
     userInfo = {"userName":query.from_user.full_name,"userId":str(query.from_user.id)}
     chat_member = await context.bot.get_chat_member(chat_id=channal_link, user_id=query.from_user.id, )
     keyboard = [[
-            InlineKeyboardButton("OK", callback_data=f"check_user:{referal}")
+            InlineKeyboardButton("Ready", callback_data=f"check_user:{referal}")
         ]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
