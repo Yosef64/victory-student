@@ -131,10 +131,10 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         elif text in ['🔝 Main Menu', '🔙 Back']:
             await start(update, context)
         else:
-            keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{message}")]]
+            keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             await update.message.reply_text(
-                text=f"Your message is:\n{message}",
+                text=f"Your message is:\n{text}",
                 reply_markup=reply_markup,
             )
     except Exception as e:
