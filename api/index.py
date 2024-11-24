@@ -190,7 +190,8 @@ async def button(update:Update,context:CallbackContext):
                 setLastId(sender_user_id)
             await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
         except Exception as e:
-            await context.bot.send_message(chat_id=userId, text=e)
+            await context.bot.send_message(chat_id=userId, text=str(e))
+
     elif action == "send":
         setStudentInfo(userId,["ready",False])
         keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
