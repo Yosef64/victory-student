@@ -110,6 +110,7 @@ def setLastId(teleid):
 def getLastId():
     ref = studRef.document("lastmessage").get().to_dict()
     return ref["teleid"]  
+
 message = r"""ስለ Victory Tutorial ከተማሪዎች የሚነሱ ጥያቄዎች🤔🤔🤔?።
  
 1\. *Tutorial በ*video *ወይስ በ* note *ነው የሚሰጠው?*

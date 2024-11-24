@@ -114,6 +114,7 @@ Grade choice: {grade if grade else "Didn't choose a grade"}
         if agentTeleId:
             await update.message.forward(chat_id=agentTeleId)
             await context.bot.send_message(chat_id=agentTeleId, text=textAgent)
+        await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል",reply_markup=reply_markup)
 async def final(update:Update,context:CallbackContext,M):
     keyboard = [["🔝 Main Menu"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
@@ -145,12 +146,14 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         elif text in ['🔝 Main Menu', '🔙 Back']:
             await start(update, context)
         else:
-            keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-            await update.message.reply_text(
-                text=f"Your message is:\n{text}",
-                reply_markup=reply_markup,
-            )
+            data = GetStudentInfo()
+            if "ready" in data and data["ready"]:
+                keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
+                reply_markup = InlineKeyboardMarkup(keyboard)
+                await update.message.reply_text(
+                    text=f"Your message is:\n\"{text}\"",
+                    reply_markup=reply_markup,
+                )
     except Exception as e:
         await update.message.reply_text("An error occurred. Please try again.")
 
@@ -179,10 +182,12 @@ async def button(update:Update,context:CallbackContext):
         await context.bot.send_message(chat_id=query.from_user.id, text="You have successfully deny the request!")
         await context.bot.send_message(chat_id=agentTeleId,text=f"User {stud} has denied!")
     elif action== "ask":
+        setStudentInfo(userId,["ready",True])
         if str(userId) == Admin_id:
             setLastId(sender_user_id)
         await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
     elif action == "send":
+        setStudentInfo(userId,["ready",False])
         keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if str(userId) == Admin_id:
