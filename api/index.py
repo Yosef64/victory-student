@@ -169,7 +169,7 @@ async def button(update:Update,context:CallbackContext):
             setLastId(sender_user_id)
         await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
     elif action == "send":
-        keyboard = [[InlineKeyboardButton("Reply", callback_data=f"reply:{userId}:{" "}")]]
+        keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         if userId == Admin_id:
             to = getLastId()
