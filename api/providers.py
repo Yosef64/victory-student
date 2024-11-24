@@ -80,6 +80,9 @@ def GetStudentInfo(stId):
     if ref.exists:
         return ref.to_dict()
     return {}
+def setStudentInfo(stId,info):
+    fieldToUpdate,value = info
+    ref = studRef.document(stId).update({fieldToUpdate:value})
 def this_week(dates):
     
     current_date = datetime.now()
