@@ -10,7 +10,7 @@ from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, Ge
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 channal_link = "@VictoryTutor_7"
 app = FastAPI()
-Admin_id = "1656463485"
+Admin_id = "6053243300"
 
 def getMainMarkup():
     keyboard = [["📚12th Natural Entrance Examinee student"],
