@@ -104,8 +104,12 @@ def format_date(date):
     day = date.day  # Get the day of the month without leading zero
 
     return f"{year}-{month}-{day}"
-        
-    
+def setLastId(teleid):
+    ref = studRef.document("lastmessage")
+    ref.set({"teleid":teleid})       
+def getLastId():
+    ref = studRef.document("lastmessage").get().to_dict()
+    return ref["teleid"]  
 message = r"""ስለ Victory Tutorial ከተማሪዎች የሚነሱ ጥያቄዎች🤔🤔🤔?።
  
 1\. *Tutorial በ*video *ወይስ በ* note *ነው የሚሰጠው?*

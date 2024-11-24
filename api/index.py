@@ -4,13 +4,13 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update,ReplyKey
 from telegram.ext import Application, CommandHandler,MessageHandler,CallbackQueryHandler,filters,CallbackContext
 from telegram.ext._contexttypes import ContextTypes
 from fastapi import FastAPI, Request, Response
-from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo,natural, setStudentInfo,social,message,Banks
+from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo, getLastId,natural, setLastId, setStudentInfo,social,message,Banks
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 channal_link = "@VictoryTutor_7"
 app = FastAPI()
-
+Admin_id = "1656463485"
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # await update.message.reply_text("hello world")
     # return
@@ -69,7 +69,7 @@ async def banks(update: Update, context: CallbackContext) -> None:
 async def forward_photo_to_bot_b(update: Update, context: CallbackContext) -> None:
     userId = update.message.from_user.id
     if update.message.photo:
-        target_chat_id = "1656463485"
+        
         studData = GetStudentInfo(str(userId))
         bank, grade = studData["bank"], studData["grade"]
         agentTeleId , agentReferalCode = GetAgentTeleId(str(update.message.from_user.id))
@@ -91,49 +91,53 @@ Grade choice: {grade if grade else "Didn't choose a grade"}
 """
 
         keyboard = [
-        [InlineKeyboardButton("Approve 👍", callback_data=f"approve:{update.message.from_user.id}:{agentTeleId}"),
-             InlineKeyboardButton("Deny 🚫", callback_data=f"deny:{update.message.from_user.id}:{agentTeleId}"),
-             InlineKeyboardButton("Ask ⚠️", callback_data=f"ask:{update.message.from_user.id}")]
+        [InlineKeyboardButton("Approve 👍", callback_data=f"approve:{userId}:{agentTeleId}"),
+             InlineKeyboardButton("Deny 🚫", callback_data=f"deny:{userId}:{agentTeleId}"),
+             InlineKeyboardButton("Ask ⚠️", callback_data=f"ask:{userId}:{agentTeleId}")]
     ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.forward(chat_id=target_chat_id)
-        await context.bot.send_message(chat_id=target_chat_id, text=textAdmin, reply_markup=reply_markup)
+        await update.message.forward(chat_id=Admin_id)
+        await context.bot.send_message(chat_id=Admin_id, text=textAdmin, reply_markup=reply_markup)
         if agentTeleId:
             await update.message.forward(chat_id=agentTeleId)
             await context.bot.send_message(chat_id=agentTeleId, text=textAgent)
 async def final(update:Update,context:CallbackContext,M):
-    keyboard = [['🔙 Back', "🔝 Main Menu"]]
+    keyboard = [["🔝 Main Menu"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     await update.message.reply_text(M , reply_markup=reply_markup,parse_mode="MarkdownV2")
 
 async def handle_option(update: Update, context: CallbackContext) -> None:
     global stack
     possibles = ['📚12th Natural Entrance Examinee student',"📚12th Social Entrance Examinee student","📚Natural Remedial student","📚Social Remedial student"]
-    text = update.message.text
+    text ,userId = update.message.text, update.message.from_user.id
     if text in possibles:
-        setStudentInfo(str(update.message.from_user.id),["grade",text])
+        setStudentInfo(str(userId),["grade",text])
         await payment(update, context,text in ['📚12th Natural Entrance Examinee student',"📚Natural Remedial student"] )
     elif text == 'ከተማሪዎች የሚነሱ ተደጋጋሚ ጥያቄዎች❓':
         await update.message.reply_text(message, quote=True, parse_mode="MarkdownV2")
     elif text == "payment method 💳":
         await banks(update, context)
     elif text in ['CBE', 'Tele Birr', 'Awash Bank', 'E-Birr']:
-        setStudentInfo(str(update.message.from_user.id),["bank",text])
+        setStudentInfo(str(userId),["bank",text])
         await final(update,context,Banks[text])
-    elif text == '🔝 Main Menu':
-        stack = []
+    elif text in ['🔝 Main Menu','🔙 Back']:
         await start(update, context)
+    else:
+        keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{userId}:{message}")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await context.bot.send_message(chat_id=userId, text=f"Your message is :\n{message}",reply_markup=reply_markup) 
 async def button(update:Update,context:CallbackContext):
     query = update.callback_query
     await query.answer()
-
+    userId = query.from_user.id
     action, sender_user_id ,agentTeleId = query.data.split(":")
     stud = GetStudent(sender_user_id)
     if action == "approve":
         studInfo = GetStudentInfo(sender_user_id)
         if studInfo["approved"]:
             await context.bot.send_message(chat_id=query.from_user.id, text="You have already approve this student!")
-            return
+            return 
+        
         result = ApproveStudent(sender_user_id)
         if result['ok']:
 
@@ -146,7 +150,19 @@ async def button(update:Update,context:CallbackContext):
         await context.bot.send_message(chat_id=sender_user_id, text="Your request has been denied.")
         await context.bot.send_message(chat_id=query.from_user.id, text="You have successfully deny the request!")
         await context.bot.send_message(chat_id=agentTeleId,text=f"User {stud} has denied!")
-
+    elif action== "ask":
+        if userId == Admin_id:
+            setLastId(sender_user_id)
+        await context.bot.send_message(chat_id=query.from_user.id, text="Write you message")
+    elif action == "send":
+        keyboard = [[InlineKeyboardButton("Reply", callback_data=f"ask:{userId}:{" "}")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        if userId == Admin_id:
+            to = getLastId()
+            await context.bot.send_message(chat_id=to,text=f"From admin:\n{agentTeleId}",reply_markup=reply_markup)
+        else:
+            await  context.bot.send_message(chat_id=Admin_id, text=f"From {query.from_user.username}:\n{message}")
+        
 @app.post("/")
 async def process_update(request: Request):
     application = (
