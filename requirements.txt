@@ -1,0 +1,5 @@
+fastapi==0.115.4
+python-telegram-bot==21.6
+requests==2.32.3
+firebase-admin==6.5.0
+nanoid
