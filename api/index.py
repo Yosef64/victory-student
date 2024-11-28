@@ -124,7 +124,7 @@ async def final(update:Update,context:CallbackContext,M):
 
 async def handle_option(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
-    text = update.message.text
+    text = str(update.message.text)
     student_categories = {
         "📚12th Natural Entrance Examinee student": True,
         "📚Natural Remedial student": True,

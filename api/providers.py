@@ -100,8 +100,8 @@ def this_week(dates):
 
 def format_date(date):
     year = date.year
-    month = str(date.month).zfill(2)  # Month is zero-indexed, so add 1
-    day = date.day  # Get the day of the month without leading zero
+    month = str(date.month).zfill(2)  
+    day = date.day
 
     return f"{year}-{month}-{day}"
 def setLastId(teleid):
