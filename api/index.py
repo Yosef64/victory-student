@@ -160,6 +160,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
                 await update.message.reply_text(
                     text=f"Your message is:\n\"{txt}\"",
                     reply_markup=reply_markup,
+                    parse_mode="MarkdownV2"
                 )
     except Exception as e:
         await update.message.reply_text("An error occurred. Please try again.")
