@@ -1,5 +1,6 @@
 from http import HTTPStatus
 import os
+import re
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update,ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler,MessageHandler,CallbackQueryHandler,filters,CallbackContext
 from telegram.ext._contexttypes import ContextTypes
@@ -121,7 +122,10 @@ async def final(update:Update,context:CallbackContext,M):
     keyboard = [["🔝 Main Menu"]]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     await update.message.reply_text(M , reply_markup=reply_markup,parse_mode="MarkdownV2")
-
+def escape_markdown_v2(text):
+    # List of special characters in MarkdownV2
+    special_chars = r'[_*[\]()~`>#+-=|{}.!]'
+    return re.sub(f'([{special_chars}])', r'\\\1', text)
 async def handle_option(update: Update, context: CallbackContext) -> None:
     user_id = update.message.from_user.id
     text = str(update.message.text)
@@ -150,10 +154,11 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
         else:
             data = GetStudentInfo(str(user_id))
             if "ready" in data and data["ready"]:
-                keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{text}")]]
+                txt = escape_markdown_v2(text)
+                keyboard = [[InlineKeyboardButton("Send", callback_data=f"send:{user_id}:{txt}")]]
                 reply_markup = InlineKeyboardMarkup(keyboard)
                 await update.message.reply_text(
-                    text=f"Your message is:\n\"{text}\"",
+                    text=f"Your message is:\n\"{txt}\"",
                     reply_markup=reply_markup,
                 )
     except Exception as e:
