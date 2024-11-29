@@ -159,7 +159,7 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
                     reply_markup=reply_markup,
                 )
     except Exception as e:
-        await update.message.reply_text("An error occurred. Please try again.")
+        await update.message.reply_text(f"{e}")
 
 async def button(update:Update,context:CallbackContext):
     query = update.callback_query
