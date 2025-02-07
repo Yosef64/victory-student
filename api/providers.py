@@ -39,7 +39,7 @@ def ApproveStudent(student):
             
             TWeek = this_week(cur_agent['timestamp'])
             
-            BASE_AMOUNT = 400
+            BASE_AMOUNT = 499
             PERCENTAGE = 0.25
             BONUS_AMOUNT = 10
             WEEKLY_BONUS_THRESHOLD = 5
