@@ -5,7 +5,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update,ReplyKey
 from telegram.ext import Application, CommandHandler,MessageHandler,CallbackQueryHandler,filters,CallbackContext
 from telegram.ext._contexttypes import ContextTypes
 from fastapi import FastAPI, Request, Response
-from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo, getLastId,natural, setLastId, setStudentInfo,social,message,Banks,txt
+from .providers import AddStudent, ApproveStudent, GetAgentTeleId,GetStudent, GetStudentInfo, getLastId, getMessage,natural, setLastId, setStudentInfo,social,message,Banks,txt
 
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -120,6 +120,7 @@ Grade choice: {grade if grade else "Didn't choose a grade"}
         await update.message.reply_text("👉የላካቹልንን ፎቶ በሰዐታት ውስጥ አረጋግጠን ወደ Victory Academy የምትቀላቀሉ ይሆናል",reply_markup=reply_markup)
 async def final(update:Update,context:CallbackContext,M):
     keyboard = [["🔝 Main Menu"]]
+    
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     await update.message.reply_text(M , reply_markup=reply_markup,parse_mode="MarkdownV2")
 
@@ -145,7 +146,9 @@ async def handle_option(update: Update, context: CallbackContext) -> None:
             await banks(update, context)
         elif text in bank:
             setStudentInfo(str(user_id), ["bank", text])
-            await final(update, context, Banks[text])
+            info = GetStudentInfo(str(user_id))
+            grade = info["grade"] if "grade" in info else ""
+            await final(update, context, getMessage(text,grade))
         elif text in ['🔝 Main Menu', '🔙 Back']:
             await start(update, context)
         else:
