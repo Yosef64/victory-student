@@ -239,7 +239,7 @@ Banks = {
     'CBE':Cbe, 'Tele Birr':teleBirr, 'Awash Bank':awashBank, 'E-Birr':EBirr
 }
 def getMessage(bank,grade):
-    price = 499 if grade in ["📚Social Remedial student","📚Natural Remedial student"] else 399
+    price = 399 if grade in ["📚Social Remedial student","📚Natural Remedial student"] else 499
     return Banks[bank].format(price=price)
 txt = '''
 🎉 *Welcome to Victory Academy*
