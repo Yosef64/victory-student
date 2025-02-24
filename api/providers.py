@@ -37,28 +37,22 @@ def ApproveStudent(student):
             cur_agent['timestamp'].append(date)
             cur_agent['ownStud'] += 1
             
-            TWeek = this_week(cur_agent['timestamp'])
             stinfo = GetStudentInfo(student)
             
             BASE_AMOUNT = 399 if "grade" in stinfo and stinfo["grade"] in ["📚Social Remedial student","📚Natural Remedial student"] else 499
             PERCENTAGE = 0.25
-            BONUS_AMOUNT = 10
-            WEEKLY_BONUS_THRESHOLD = 5
+            total_money = 100
             
-            total_money = BASE_AMOUNT * PERCENTAGE 
-            if not TWeek % 5:
-                total_money += (TWeek % WEEKLY_BONUS_THRESHOLD) * BONUS_AMOUNT
             cur_agent['totalAmount'] += total_money
             cur_parent = cur_agent['parent']
 
-            ind = 0
-            while ind < 2 and cur_parent in agent_data and cur_parent:
+            if cur_parent in agent_data and cur_parent:
                 agent_payment = 100 * PERCENTAGE
                 agent_data[cur_parent]['totalAmount'] += agent_payment
                 agent_data[cur_parent]['agentStud'] += 1
                 total_money += agent_payment
                 cur_parent = agent_data[cur_parent]['parent']
-                ind += 1
+                
             
             agentStat.update(agent_data)
             admin.document(agent_referal_code).set({'money': BASE_AMOUNT - total_money, 'timeStamp': date})
