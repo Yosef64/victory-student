@@ -38,8 +38,9 @@ def ApproveStudent(student):
             cur_agent['ownStud'] += 1
             
             TWeek = this_week(cur_agent['timestamp'])
+            stinfo = GetStudentInfo(student)
             
-            BASE_AMOUNT = 499
+            BASE_AMOUNT = 399 if "grade" in stinfo and stinfo["grade"] in ["📚Social Remedial student","📚Natural Remedial student"] else 499
             PERCENTAGE = 0.25
             BONUS_AMOUNT = 10
             WEEKLY_BONUS_THRESHOLD = 5
@@ -61,14 +62,11 @@ def ApproveStudent(student):
             
             agentStat.update(agent_data)
             admin.document(agent_referal_code).set({'money': BASE_AMOUNT - total_money, 'timeStamp': date})
-        print("successfully sending agents")
+        
         return {"ok": True, 'message': "send"}
     except KeyError as e: 
-        logger.error(f"KeyError: {str(e)}")
         return {"ok": False, "error": f"KeyError: {str(e)}"}
     except Exception as e:
-        print("The error while sending transaction")
-        logger.error(f"An error occurred: {str(e)}")
         return {"ok": False, "error": str(e)}
 
 def GetStudent(stId):
